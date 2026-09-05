@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from '@/context/RouterContext';
 import { createComment, updateComment, deleteComment } from '@/lib/api';
@@ -6,7 +6,7 @@ import type { Comment } from '@/types';
 import { formatRelative } from '@/lib/utils';
 import Avatar from '@/components/Avatar';
 import { Spinner, EmptyState } from '@/components/Loaders';
-import { MessageCircle, Edit2, Trash2, Reply, Send, X } from 'lucide-react';
+import { MessageCircle, Edit2, Trash2, Reply, Send } from 'lucide-react';
 
 interface CommentSectionProps {
   postId: string;
@@ -65,6 +65,10 @@ export function CommentSection({
   }
 
   async function handleReply(parentId: string) {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
     if (!replyText.trim()) return;
     setSubmitting(true);
     setError(null);

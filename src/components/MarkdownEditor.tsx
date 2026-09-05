@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, KeyboardEvent } from 'react';
+import { useState, useRef, KeyboardEvent } from 'react';
 
 interface MarkdownEditorProps {
   value: string;
@@ -182,11 +182,20 @@ export function renderMarkdown(md: string): string {
   // Inline code
   html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
 
-  // Images
-  html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2" />');
+  // Images and links. Only permit protocols that are safe to render in the browser.
+  // Markdown is user-authored content, so never place an arbitrary URL in an HTML attribute.
+  html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, url) => {
+    const safeUrl = getSafeUrl(url, ['http:', 'https:']);
+    return safeUrl ? `<img alt="${escapeAttribute(alt)}" src="${safeUrl}" />` : escapeMarkdownImage(alt, url);
+  });
 
   // Links
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, url) => {
+    const safeUrl = getSafeUrl(url, ['http:', 'https:', 'mailto:']);
+    return safeUrl
+      ? `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer">${label}</a>`
+      : label;
+  });
 
   // Headers
   html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
@@ -235,4 +244,19 @@ export function renderMarkdown(md: string): string {
     .join('\n');
 
   return html;
+}
+
+function escapeAttribute(value: string): string {
+  return value.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function getSafeUrl(value: string, allowedProtocols: string[]): string | null {
+  const normalized = value.trim();
+  const protocolMatch = normalized.match(/^([a-z][a-z\d+.-]*:)/i);
+  if (!protocolMatch || !allowedProtocols.includes(protocolMatch[1].toLowerCase())) return null;
+  return escapeAttribute(normalized);
+}
+
+function escapeMarkdownImage(alt: string, url: string): string {
+  return `![${alt}](${url})`;
 }

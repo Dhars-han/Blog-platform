@@ -3,9 +3,9 @@ import { useRouter } from '@/context/RouterContext';
 import { useAuth } from '@/context/AuthContext';
 import { fetchProfile, updateProfile, fetchPosts } from '@/lib/api';
 import type { Profile, Post } from '@/types';
-import { formatDate, classNames } from '@/lib/utils';
+import { formatDate } from '@/lib/utils';
 import Avatar from '@/components/Avatar';
-import { Spinner, CardSkeleton, EmptyState, ErrorState } from '@/components/Loaders';
+import { Spinner, EmptyState, ErrorState } from '@/components/Loaders';
 import { Save, X, Edit3, FileText } from 'lucide-react';
 
 interface UserProfileProps {

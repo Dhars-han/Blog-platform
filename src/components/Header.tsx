@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from '@/context/RouterContext';
 import Avatar from './Avatar';
-import { Menu, X, PenSquare, LogOut, User as UserIcon, FileText, BookOpen } from 'lucide-react';
+import { Menu, X, PenSquare, LogOut, User as UserIcon, BookOpen } from 'lucide-react';
 
 export default function Header() {
   const { user, profile, signOut } = useAuth();
