@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-ink-50 text-ink-900 font-sans antialiased;
+    font-feature-settings: 'kern', 'liga', 'clig';
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-ink-900 text-white hover:bg-ink-800 active:bg-ink-950;
+  }
+  .btn-accent {
+    @apply btn bg-accent-600 text-white hover:bg-accent-700 active:bg-accent-800;
+  }
+  .btn-secondary {
+    @apply btn bg-white border border-ink-200 text-ink-700 hover:bg-ink-50 hover:border-ink-300;
+  }
+  .btn-ghost {
+    @apply btn text-ink-600 hover:bg-ink-100;
+  }
+  .btn-danger {
+    @apply btn bg-red-600 text-white hover:bg-red-700;
+  }
+  .input {
+    @apply w-full px-3.5 py-2.5 rounded-lg border border-ink-200 bg-white text-ink-900 placeholder-ink-400
+           focus:outline-none focus:ring-2 focus:ring-accent-400 focus:border-transparent
+           transition-all duration-150 text-sm;
+  }
+  .label {
+    @apply block text-sm font-medium text-ink-700 mb-1.5;
+  }
+  .card {
+    @apply bg-white rounded-xl border border-ink-100 shadow-sm;
+  }
+  .tag-chip {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-sage-100 text-sage-700 border border-sage-200 transition-colors hover:bg-sage-200 cursor-pointer;
+  }
+  .prose-blog {
+    @apply text-ink-700 leading-relaxed text-[1.0625rem];
+  }
+  .prose-blog h1 {
+    @apply text-3xl font-bold text-ink-900 mt-8 mb-4;
+  }
+  .prose-blog h2 {
+    @apply text-2xl font-bold text-ink-900 mt-6 mb-3;
+  }
+  .prose-blog h3 {
+    @apply text-xl font-semibold text-ink-800 mt-5 mb-2;
+  }
+  .prose-blog p {
+    @apply my-4 leading-7;
+  }
+  .prose-blog ul {
+    @apply list-disc pl-6 my-4 space-y-1;
+  }
+  .prose-blog ol {
+    @apply list-decimal pl-6 my-4 space-y-1;
+  }
+  .prose-blog blockquote {
+    @apply border-l-4 border-accent-400 pl-4 italic text-ink-600 my-4;
+  }
+  .prose-blog code {
+    @apply bg-ink-100 text-ink-800 rounded px-1.5 py-0.5 text-sm font-mono;
+  }
+  .prose-blog pre {
+    @apply bg-ink-900 text-ink-100 rounded-lg p-4 my-4 overflow-x-auto text-sm;
+  }
+  .prose-blog pre code {
+    @apply bg-transparent text-inherit p-0;
+  }
+  .prose-blog a {
+    @apply text-accent-700 underline hover:text-accent-800;
+  }
+  .prose-blog img {
+    @apply rounded-lg my-4 w-full;
+  }
+  .prose-blog hr {
+    @apply my-6 border-ink-200;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-ink-300 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-ink-400;
+}
