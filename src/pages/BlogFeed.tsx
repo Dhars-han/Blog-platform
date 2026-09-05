@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from '@/context/RouterContext';
 import { fetchPosts, fetchAllTags } from '@/lib/api';
 import type { Post } from '@/types';
 import { formatDate, readingTime, classNames } from '@/lib/utils';
 import Avatar from '@/components/Avatar';
-import { CardSkeleton, EmptyState, ErrorState, Spinner } from '@/components/Loaders';
-import { Search, FileText, ArrowRight, PenSquare } from 'lucide-react';
+import { CardSkeleton, EmptyState, ErrorState } from '@/components/Loaders';
+import { Search, FileText, PenSquare } from 'lucide-react';
 
 const POSTS_PER_PAGE = 9;
 
@@ -17,6 +17,7 @@ export default function BlogFeed() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [tags, setTags] = useState<string[]>([]);
   const [tagsLoading, setTagsLoading] = useState(true);
@@ -27,7 +28,7 @@ export default function BlogFeed() {
     try {
       const { posts: data, total: count } = await fetchPosts({
         page,
-        search: search || undefined,
+        search: debouncedSearch || undefined,
         tag: activeTag ?? undefined,
       });
       setPosts(data);
@@ -37,7 +38,7 @@ export default function BlogFeed() {
     } finally {
       setLoading(false);
     }
-  }, [page, search, activeTag]);
+  }, [page, debouncedSearch, activeTag]);
 
   useEffect(() => {
     loadPosts();
@@ -50,18 +51,20 @@ export default function BlogFeed() {
       .finally(() => setTagsLoading(false));
   }, []);
 
-  // Debounce search
+  // Debounce search input so a query is not sent for every keystroke.
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (page !== 1) setPage(1);
-      else loadPosts();
+      setDebouncedSearch(search);
     }, 350);
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   useEffect(() => {
-    if (page !== 1) setPage(1);
+    setPage(1);
+  }, [debouncedSearch]);
+
+  useEffect(() => {
+    setPage((currentPage) => (currentPage === 1 ? currentPage : 1));
   }, [activeTag]);
 
   const totalPages = Math.ceil(total / POSTS_PER_PAGE);

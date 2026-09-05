@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from '@/context/RouterContext';
 import { useAuth } from '@/context/AuthContext';
-import { fetchPostBySlug, fetchComments, createComment, updateComment, deleteComment, fetchLikeInfo, toggleLike, deletePost } from '@/lib/api';
+import { fetchPostBySlug, fetchComments, fetchLikeInfo, toggleLike, deletePost } from '@/lib/api';
 import { renderMarkdown } from '@/components/MarkdownEditor';
 import type { Post, Comment } from '@/types';
-import { formatDate, formatRelative, readingTime, classNames } from '@/lib/utils';
+import { formatDate, readingTime, classNames } from '@/lib/utils';
 import Avatar from '@/components/Avatar';
 import { FullPageLoader, ErrorState, EmptyState } from '@/components/Loaders';
 import { CommentSection } from '@/components/CommentSection';
@@ -16,7 +16,7 @@ interface PostDetailProps {
 
 export default function PostDetail({ slug }: PostDetailProps) {
   const { navigate } = useRouter();
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
